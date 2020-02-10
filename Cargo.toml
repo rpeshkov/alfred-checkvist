@@ -1,0 +1,21 @@
+[package]
+name = "alfred-checkvist"
+version = "0.1.0"
+authors = ["Roman Peshkov <peshkovroman@gmail.com>"]
+edition = "2018"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+alfred = "4"
+ureq = { version = "0.11.4", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.47"
+chrono = { version = "0.4", features = ["serde"] }
+
+[profile.release]
+lto = true
+panic = "abort"
+opt-level = "z"
+codegen-units = 1
