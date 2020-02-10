@@ -8,7 +8,7 @@ Alfred workflow for quickly accessing your checklists in the Checkvist.
 
 ## Installation
 
-- Download latest alfred-checkvist.alfredworkflow file from releases page
+- Download latest `alfred-checkvist.alfredworkflow` file from the [releases](https://github.com/rpeshkov/alfred-checkvist/releases/latest) page
 - Import your workflow by double-clicking on downloaded file
 - Set variables `cv_login` and `cv_apikey` in the import page
 - Click `Import` button
