@@ -60,6 +60,11 @@ fn get_checklists(login: String, api_key: String) -> Result<Vec<Checklist>, std:
     Ok(items)
 }
 
+const ERROR_ICON: &str =
+    "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns";
+const FETCH_FAILED_MESSAGE: &str = "Checklists fetch has failed!";
+const FETCH_FAILED_DESCRIPTION: &str = "Please check your credentials in the Workflow's settings";
+
 fn main() -> Result<(), std::io::Error> {
     let login = std::env::var("cv_login").unwrap_or_default();
     let api_key = std::env::var("cv_apikey").unwrap_or_default();
@@ -89,9 +94,9 @@ fn main() -> Result<(), std::io::Error> {
         }
         Err(_) => {
             let items = vec![
-                alfred::ItemBuilder::new("Checklists fetch has failed!")
-                    .subtitle("Please check your credentials in the Workflow's settings")
-                    .icon_path("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns")
+                alfred::ItemBuilder::new(FETCH_FAILED_MESSAGE)
+                    .subtitle(FETCH_FAILED_DESCRIPTION)
+                    .icon_path(ERROR_ICON)
                     .into_item(),
             ];
             alfred::json::write_items(std::io::stdout(), &items)
