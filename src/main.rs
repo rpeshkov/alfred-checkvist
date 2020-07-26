@@ -77,7 +77,7 @@ fn main() -> Result<(), std::io::Error> {
                 .into_iter()
                 .filter(|x| {
                     if args.len() > 1 {
-                        x.name.to_lowercase().contains(&args[1])
+                        x.name.to_lowercase().contains(&args[1].to_lowercase())
                     } else {
                         true
                     }
