@@ -64,10 +64,19 @@ fn main() -> Result<(), std::io::Error> {
     let login = std::env::var("cv_login").unwrap_or_default();
     let api_key = std::env::var("cv_apikey").unwrap_or_default();
 
+    let args = std::env::args().collect::<Vec<String>>();
+
     match get_checklists(login, api_key) {
         Ok(checklists) => {
             let items = checklists
                 .into_iter()
+                .filter(|x| {
+                    if args.len() > 1 {
+                        x.name.to_lowercase().contains(&args[1])
+                    } else {
+                        true
+                    }
+                })
                 .map(|x| {
                     alfred::ItemBuilder::new(x.name)
                         .arg(x.id.to_string())
