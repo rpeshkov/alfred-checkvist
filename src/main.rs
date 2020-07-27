@@ -3,14 +3,42 @@ extern crate serde;
 
 mod checkvist;
 
+const LOGIN_VAR: &str = "cv_login";
+const API_KEY_VAR: &str = "cv_apikey";
+
 const ERROR_ICON: &str =
     "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns";
 const FETCH_FAILED_MESSAGE: &str = "Checklists fetch has failed!";
 const FETCH_FAILED_DESCRIPTION: &str = "Please check your credentials in the Workflow's settings";
 
+fn alfred_error(title: &str, subtitle: &str) {
+    let items = vec![
+        alfred::ItemBuilder::new(title)
+            .subtitle(subtitle)
+            .icon_path(ERROR_ICON)
+            .into_item(),
+    ];
+    alfred::json::write_items(std::io::stdout(), &items).unwrap();
+}
+
 fn main() -> Result<(), std::io::Error> {
-    let login = std::env::var("cv_login").unwrap_or_default();
-    let api_key = std::env::var("cv_apikey").unwrap_or_default();
+    let login = match std::env::var(LOGIN_VAR) {
+        Ok(v) => v,
+        Err(e) => {
+            alfred_error("No variable 'cv_login'!",
+                         "Please define the variable in the workflow settings");
+            panic!(e);
+        }
+    };
+
+    let api_key = match std::env::var(API_KEY_VAR) {
+        Ok(v) => v,
+        Err(e) => {
+            alfred_error("No variable 'cv_apikey'",
+                         "Please define the variable in the workflow settings");
+            panic!(e);
+        }
+    };
 
     let args = std::env::args().collect::<Vec<String>>();
 
@@ -36,13 +64,8 @@ fn main() -> Result<(), std::io::Error> {
             alfred::json::write_items(std::io::stdout(), &items)
         }
         Err(_) => {
-            let items = vec![
-                alfred::ItemBuilder::new(FETCH_FAILED_MESSAGE)
-                    .subtitle(FETCH_FAILED_DESCRIPTION)
-                    .icon_path(ERROR_ICON)
-                    .into_item(),
-            ];
-            alfred::json::write_items(std::io::stdout(), &items)
+            alfred_error(FETCH_FAILED_MESSAGE, FETCH_FAILED_DESCRIPTION);
+            panic!(FETCH_FAILED_MESSAGE);
         }
     }
 }
