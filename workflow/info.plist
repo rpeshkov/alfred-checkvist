@@ -138,7 +138,7 @@ Supported commands:
 		<string>cv_login</string>
 	</array>
 	<key>version</key>
-	<string>1.0.0.0</string>
+	<string>1.1.0.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/rpeshkov/alfred-checkvist</string>
 </dict>
