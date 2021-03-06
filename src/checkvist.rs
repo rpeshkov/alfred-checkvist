@@ -48,11 +48,12 @@ mod checkvist_date {
     }
 }
 
-pub fn get_checklists(login: String, api_key: String) -> Result<Vec<Checklist>, std::io::Error> {
-    let json = ureq::get("https://checkvist.com/checklists.json")
-        .auth(&login, &api_key)
-        .call()
+pub fn get_checklists(login: String, api_key: String) -> Result<Vec<Checklist>, ureq::Error> {
+    let creds = base64::encode(format!("{}:{}", &login, &api_key));
+    let auth = format!("Basic {}", creds);
+    let checklists: Vec<Checklist> = ureq::get("https://checkvist.com/checklists.json")
+        .set("Authorization", &auth)
+        .call()?
         .into_json()?;
-    let items = serde_json::from_value::<Vec<Checklist>>(json)?;
-    Ok(items)
+    Ok(checklists)
 }
