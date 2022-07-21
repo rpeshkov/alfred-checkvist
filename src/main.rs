@@ -1,8 +1,3 @@
-#[macro_use]
-extern crate serde;
-
-mod checkvist;
-
 const LOGIN_VAR: &str = "cv_login";
 const API_KEY_VAR: &str = "cv_apikey";
 
@@ -42,7 +37,9 @@ fn main() -> Result<(), std::io::Error> {
 
     let args = std::env::args().collect::<Vec<String>>();
 
-    match checkvist::get_checklists(login, api_key) {
+    let client = checkvist::Client::new(login, api_key);
+
+    match client.get_checklists() {
         Ok(checklists) => {
             let items = checklists
                 .into_iter()
